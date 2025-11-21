@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Book Collection</h2>
+            
+            <!-- Search and Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-6">
+                            <input type="text" name="q" class="form-control" placeholder="Search by title, author, or ISBN..." value="{{ query }}">
+                        </div>
+                        <div class="col-md-4">
+                            <select name="genre" class="form-select">
+                                <option value="">All Genres</option>
+                                <option value="fiction" {% if genre_filter == 'fiction' %}selected{% endif %}>Fiction</option>
+                                <option value="non-fiction" {% if genre_filter == 'non-fiction' %}selected{% endif %}>Non-Fiction</option>
+                                <option value="science" {% if genre_filter == 'science' %}selected{% endif %}>Science</option>
+                                <option value="technology" {% if genre_filter == 'technology' %}selected{% endif %}>Technology</option>
+                                <option value="history" {% if genre_filter == 'history' %}selected{% endif %}>History</option>
+                                <option value="biography" {% if genre_filter == 'biography' %}selected{% endif %}>Biography</option>
+                                <option value="children" {% if genre_filter == 'children' %}selected{% endif %}>Children</option>
+                                <option value="other" {% if genre_filter == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Books Grid -->
+            <div class="row">
+                {% for book in books %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+                            <p class="card-text">{{ book.description|truncatewords:25 }}</p>
+                            <div class="mb-2">
+                                <span class="badge bg-primary">{{ book.get_genre_display }}</span>
+                                <span class="badge bg-{% if book.status == 'available' %}success{% else %}danger{% endif %}">
+                                    {{ book.get_status_display }}
+                                </span>
+                            </div>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Available: {{ book.available_copies }}/{{ book.total_copies }}
+                                </small>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'book_detail' book.id %}" class="btn btn-primary btn-sm">View Details</a>
+                            {% if book.status == 'available' and user.is_authenticated %}
+                            <a href="{% url 'borrow_book' book.id %}" class="btn btn-success btn-sm">Borrow</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No books found matching your criteria.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,190 @@
+/* Custom Admin Theme */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --light-bg: #f8f9fa;
+}
+
+/* Header Styling */
+#header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%) !important;
+    color: white !important;
+    border-bottom: 3px solid var(--secondary-color) !important;
+}
+
+#branding h1 {
+    color: white !important;
+    font-weight: 700 !important;
+}
+
+#branding h1 a {
+    color: white !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+/* Breadcrumb */
+.breadcrumbs {
+    background: linear-gradient(135deg, var(--light-bg) 0%, #e9ecef 100%) !important;
+    border: none !important;
+    padding: 10px 15px !important;
+}
+
+/* Module Headers */
+.module h2, .module caption {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #2980b9 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* Tables */
+thead th {
+    background: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+table thead th.sorted {
+    background: var(--secondary-color) !important;
+}
+
+/* Buttons */
+input[type="submit"], button, .submit-row input {
+    background: var(--secondary-color) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 8px 15px !important;
+    font-weight: 600 !important;
+}
+
+input[type="submit"]:hover, button:hover, .submit-row input:hover {
+    background: var(--primary-color) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Links */
+a:link, a:visited {
+    color: var(--secondary-color) !important;
+}
+
+a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Sidebar */
+#user-tools {
+    color: white !important;
+}
+
+#user-tools a:link, #user-tools a:visited {
+    color: #ecf0f1 !important;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+#user-tools a:hover {
+    color: var(--secondary-color) !important;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+/* Form Fields */
+input[type="text"], input[type="password"], input[type="email"], 
+input[type="url"], input[type="number"], textarea, select {
+    border: 1px solid #bdc3c7 !important;
+    border-radius: 4px !important;
+    padding: 8px !important;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, 
+input[type="email"]:focus, input[type="url"]:focus, 
+input[type="number"]:focus, textarea:focus, select:focus {
+    border-color: var(--secondary-color) !important;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3) !important;
+}
+
+/* Dashboard */
+.dashboard .module table th {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+.dashboard .module table td {
+    border-bottom: 1px solid #ecf0f1 !important;
+}
+
+/* Recent Actions */
+#recent-actions-module h3 {
+    background: var(--warning-color) !important;
+    color: white !important;
+}
+
+/* Pagination */
+.paginator a:link, .paginator a:visited {
+    background: var(--secondary-color) !important;
+    color: white !important;
+    padding: 5px 10px !important;
+    border-radius: 3px !important;
+    text-decoration: none !important;
+}
+
+.paginator a:hover {
+    background: var(--primary-color) !important;
+}
+
+/* Messages */
+.success {
+    background: var(--success-color) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.error {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.warning {
+    background: var(--warning-color) !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Search Box */
+#changelist-search input[type="text"] {
+    border: 2px solid var(--secondary-color) !important;
+    border-radius: 25px !important;
+    padding: 8px 15px !important;
+}
+
+#changelist-search input[type="submit"] {
+    border-radius: 25px !important;
+    margin-left: 10px !important;
+}
+
+/* Filter Sidebar */
+.selector .selector-filter {
+    background: var(--light-bg) !important;
+    border: 1px solid #bdc3c7 !important;
+}
+
+/* Calendar and Time */
+.calendar caption, .calendarbox h2 {
+    background: var(--secondary-color) !important;
+    color: white !important;
+}
+
+.timelist a:link, .timelist a:visited {
+    background: var(--secondary-color) !important;
+    color: white !important;
+    border-radius: 3px !important;
+}
+
+.timelist a:hover {
+    background: var(--primary-color) !important;
+}

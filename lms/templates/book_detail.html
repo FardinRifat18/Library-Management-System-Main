@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="book-image-container">
+                    {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" class="card-img-top book-image" alt="{{ book.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default-book-cover.jpg' %}" class="card-img-top book-image" alt="Default Book Cover">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Borrowing Policy Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Borrowing Policy</h5>
+                </div>
+                <div class="card-body">
+                    <div class="policy-item mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                            <strong>Borrowing Period:</strong>
+                        </div>
+                        <p class="mb-0 text-muted">14 days</p>
+                    </div>
+                    
+                    <div class="policy-item mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-money-bill-wave text-danger me-2"></i>
+                            <strong>Late Fee:</strong>
+                        </div>
+                        <p class="mb-0 text-muted">100 tk per day</p>
+                    </div>
+                    
+                    <div class="policy-item mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-book text-success me-2"></i>
+                            <strong>Max Books:</strong>
+                        </div>
+                        <p class="mb-0 text-muted">5 books per member</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="important-notes">
+                        <h6 class="text-primary mb-2">Important Notes:</h6>
+                        <ul class="list-unstyled text-muted small">
+                            <li class="mb-1">
+                                <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                                Return books on time to avoid fines
+                            </li>
+                            <li class="mb-1">
+                                <i class="fas fa-hands text-info me-1"></i>
+                                Handle books with care
+                            </li>
+                            <li class="mb-0">
+                                <i class="fas fa-flag text-danger me-1"></i>
+                                Report damaged books immediately
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="card-title">{{ book.title }}</h1>
+                    <h4 class="text-muted">by {{ book.author }}</h4>
+                    
+                    <div class="mb-3">
+                        {% if book.genre %}
+                        <span class="badge bg-secondary">{{ book.genre }}</span>
+                        {% endif %}
+                        <span class="badge bg-{% if book.status == 'available' %}success{% else %}danger{% endif %} ms-2">
+                            {{ book.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <p class="card-text">{{ book.description }}</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>ISBN:</strong> {{ book.isbn }}<br>
+                            <strong>Published:</strong> {{ book.published_year }}<br>
+                            <strong>Available Copies:</strong> {{ book.available_copies }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Total Copies:</strong> {{ book.total_copies }}<br>
+                            <strong>Publisher:</strong> {{ book.publisher|default:"Not specified" }}<br>
+                            <strong>Language:</strong> {{ book.language|default:"English" }}
+                        </div>
+                    </div>
+                    
+                    <!-- Book Statistics -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title text-primary mb-3">
+                                <i class="fas fa-chart-bar me-2"></i>Book Statistics
+                            </h6>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <h4 class="text-primary mb-1">{{ book.total_borrow_count }}</h4>
+                                        <small class="text-muted">Total Borrows</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <h4 class="text-success mb-1">{{ book.available_copies }}</h4>
+                                        <small class="text-muted">Available Now</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <h4 class="text-info mb-1">{{ book.popularity_score }}</h4>
+                                        <small class="text-muted">Popularity</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        {% if user.is_authenticated %}
+                            {% if book.status == 'available' and not user_has_borrowed %}
+                            <a href="{% url 'borrow_book' book.id %}" class="btn btn-primary">
+                                <i class="fas fa-book me-1"></i>Borrow Book
+                            </a>
+                            {% elif user_has_borrowed %}
+                            <button class="btn btn-warning" disabled>
+                                <i class="fas fa-check me-1"></i>Already Borrowed
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-success">
+                                <i class="fas fa-undo me-1"></i>Return from Profile
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary" disabled>
+                                <i class="fas fa-times me-1"></i>Not Available
+                            </button>
+                            {% endif %}
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login to Borrow
+                        </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'book_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Books
+                        </a>
+                    </div>
+                    
+                    {% if user_has_borrowed %}
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        You have already borrowed this book. You can return it from your 
+                        <a href="{% url 'profile' %}" class="alert-link">profile page</a>.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Database Images Section -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-database me-2"></i>Book in Database</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="database-image-card text-center">
+                                <div class="database-image-container mb-3">
+                                    <i class="fas fa-book-open fa-4x text-primary"></i>
+                                </div>
+                                <h6>Book Record</h6>
+                                <p class="text-muted small">Stored in our digital library database</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="database-info">
+                                <h6>Database Information:</h6>
+                                <ul class="list-unstyled text-muted small">
+                                    <li class="mb-1">
+                                        <i class="fas fa-hashtag me-2"></i>
+                                        <strong>ID:</strong> {{ book.id }}
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="fas fa-calendar me-2"></i>
+                                        <strong>Added:</strong> {{ book.created_at|date:"M d, Y"|default:"Recently" }}
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="fas fa-sync me-2"></i>
+                                        <strong>Last Updated:</strong> {{ book.updated_at|date:"M d, Y"|default:"Recently" }}
+                                    </li>
+                                    <li class="mb-0">
+                                        <i class="fas fa-code me-2"></i>
+                                        <strong>ISBN:</strong> {{ book.isbn }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .book-image-container {
+        height: 400px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .book-image {
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .btn {
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+    
+    .policy-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .policy-item:last-child {
+        border-bottom: none;
+    }
+    
+    .stat-item {
+        padding: 10px;
+    }
+    
+    .database-image-card {
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        border: 2px dashed #dee2e6;
+    }
+    
+    .database-image-container {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+    }
+    
+    .important-notes li {
+        padding: 5px 0;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation to policy items
+        const policyItems = document.querySelectorAll('.policy-item');
+        policyItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+            
+            setTimeout(() => {
+                item.style.transition = 'all 0.5s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, index * 200);
+        });
+        
+        // Add hover effect to database image
+        const databaseImage = document.querySelector('.database-image-container');
+        if (databaseImage) {
+            databaseImage.addEventListener('mouseover', function() {
+                this.style.transform = 'scale(1.1)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            databaseImage.addEventListener('mouseout', function() {
+                this.style.transform = 'scale(1)';
+            });
+        }
+    });
+</script>
+{% endblock %}
